@@ -40,7 +40,6 @@ class BaseSupervisedModel(L.LightningModule):
         self.version_dir = config["version_dir"]
         self.task_type = config["task_type"]  # Added task_type property
         self.run_type = config["run_type"]
-        # print("EH")
         # print(self.task_type)
 
         self.sliding_window_prediction = True
@@ -184,6 +183,8 @@ class BaseSupervisedModel(L.LightningModule):
             output = output[0]
             target = target[0]
 
+        # print('output and target in training step:')
+        # if target.size(0) <= 1:
         metrics = self.compute_metrics(self.train_metrics, output, target)
         self.log_dict(
             {"train/loss": loss} | metrics,
@@ -193,6 +194,12 @@ class BaseSupervisedModel(L.LightningModule):
             on_step=True,
             on_epoch=True,
         )
+        # else:
+        #     # For batch size 1, log only the loss and non-variance metrics if needed
+        #     # and ensure R2Score update is skipped.
+        #     # R2Score will still calculate correctly at the end of the epoch
+        #     # as its state accumulates from larger batches.
+        #     pass
 
         return loss
 
@@ -207,6 +214,7 @@ class BaseSupervisedModel(L.LightningModule):
         output = results_dict["task_output"]
         
         loss = self.loss_fn_val(output, target)
+        # if target.size(0) <= 1:
         metrics = self.compute_metrics(self.val_metrics, output, target)
         self.log_dict(
             {"val/loss": loss} | metrics,

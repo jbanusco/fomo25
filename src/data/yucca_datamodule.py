@@ -103,13 +103,17 @@ class ModYuccaDataModule(YuccaDataModule):
             )
 
     def val_dataloader(self):
-        # Batch size = 1 instead of self.batch_size
+        # Use 1 in the case of segementation to compute the dice score properly
+        # batch_size = 1 if self.task_type == "segmentation" else self.batch_size
+        batch_size = 1  # We will always evaluate case per case using a sliding window over the patches
+        collate_fn = pad_list_data_collate  # pads to the largest shape in the batch
         sampler = self.val_sampler(self.val_dataset) if self.val_sampler is not None else None
         return DataLoader(
             self.val_dataset,
             num_workers=self.val_num_workers,            
-            batch_size=1,
+            batch_size=batch_size,
             pin_memory=torch.cuda.is_available(),
             sampler=sampler,
-            collate_fn=pad_list_data_collate,   # pads to the largest shape in the batch
+            collate_fn=collate_fn,
+            drop_last=True,
         )

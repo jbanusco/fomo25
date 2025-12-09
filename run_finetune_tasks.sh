@@ -4,13 +4,13 @@
 src_path='/home/jaume/Desktop/Code/fomo25/src'
 
 # Data
-data_path='/media/jaume/T7'
+data_path='/media/jaume/T71'
 src_data=${data_path}/FOMO-MRI
 pretrain_data=${src_data}/fomo-60k_baseline_preprocess/FOMO60k
 save_dir_test=${src_data}/model_test_jaume_upload  # Directory to save pretraining outputs  model_test_jaume_6/model_test_jaume_upload
 
 # Finetuning data
-fine_tune_data=/media/jaume/T7/finetuning_data_preprocess/mimic-pretreaining-preprocessing
+fine_tune_data=${data_path}/finetuning_data_preprocess/mimic-pretreaining-preprocessing
 
 # == Finetuning ==
 model_name="mmunetvae"
@@ -23,7 +23,7 @@ patch_size=64
 batch_size=4
 learning_rate=1e-4
 num_devices=1
-num_workers=2
+num_workers=1
 split_method="kfold"
 split_param=5 # Number of folds
 
@@ -82,7 +82,7 @@ experiment="test_experiment_upload_task2"  # Weights & Biases experiment name
 path_splits=${data_path}/data/splits_final/task2/nnunet_experiments/splits_final_no_test.json
 
 # Run only fold 0
-run_finetuning 2 ${epochs} ${experiment} ${augmentation_preset} ${path_splits} 0
+# run_finetuning 2 ${epochs} ${experiment} ${augmentation_preset} ${path_splits} 0
 
 # Run all folds
 # for i in {0..4}; do
@@ -96,7 +96,7 @@ experiment="test_experiment_upload_task3"  # Weights & Biases experiment name
 spath_splits=${data_path}/data/splits_final/task3/splits_final_no_test.json
 
 # Run only fold 0
-# run_finetuning 3 ${epochs} ${experiment} ${augmentation_preset} ${path_splits} 0
+run_finetuning 3 ${epochs} ${experiment} ${augmentation_preset} ${path_splits} 0
 
 # Run all folds
 # for i in {0..4}; do

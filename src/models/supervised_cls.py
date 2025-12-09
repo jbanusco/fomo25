@@ -20,7 +20,7 @@ class SmoothedWeightedCrossEntropyLoss(nn.Module):
         self.smoothing = smoothing
 
 
-    def forward(self, logits, targets):
+    def forward(self, logits, targets):        
         num_classes = logits.size(1)
         targets = F.one_hot(targets, num_classes).float()
 
@@ -125,16 +125,12 @@ class SupervisedClsModel(BaseSupervisedModel):
         # Convert target to long for classification tasks
         target = target.long()
 
-        # Only squeeze if dimension exists
-        if target.dim() > 1:
-            target = target.squeeze(1)
-
-        # If the segmentation is not None and the patch is empty, then the label is 0
         if seg is not None:
-            if seg.sum() > 0:
-                pass
-            else:
-                target = torch.tensor(0, dtype=torch.long, device=seg.device)
+            # Tumor present, keep original label
+            target = target * (seg > 0).long()
+        
+        if target.dim() > 1:
+            target = target.squeeze(-1)        
 
         return inputs, target, file_path
 
@@ -153,6 +149,7 @@ class SupervisedClsModel(BaseSupervisedModel):
             dict: Dictionary of computed metrics
         """
         # Apply softmax to get probabilities
+        # print(output, target)
         probabilities = F.softmax(output, dim=1)
         return metrics(probabilities, target)
 

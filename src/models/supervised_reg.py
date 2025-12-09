@@ -66,7 +66,7 @@ class SupervisedRegModel(BaseSupervisedModel):
             {
                 f"{prefix}/mse": MeanSquaredError(),
                 f"{prefix}/mae": MeanAbsoluteError(),
-                f"{prefix}/r2": R2Score(),
+                # f"{prefix}/r2": R2Score(),  # R2 gives error for batch=1
             }
         )
 
@@ -94,8 +94,10 @@ class SupervisedRegModel(BaseSupervisedModel):
             tuple: (inputs, target, file_path)
         """
         inputs, target, file_path, seg = batch["image"], batch["label"], batch["file_path"], batch["seg"]
+
         # Keep target as float for regression tasks
         target = target.float()
+
         return inputs, target, file_path
 
 
@@ -112,6 +114,7 @@ class SupervisedRegModel(BaseSupervisedModel):
         Returns:
             dict: Dictionary of computed metrics
         """
+        # print(output, target)
         return metrics(output, target)
 
 

@@ -122,10 +122,11 @@ class FOMODataset(Dataset):
         # data_dict2["image"] = seg        
         if self.composed_transforms is not None:
             data_dict = self.composed_transforms(data_dict)
-
+        
         # NOTE: Remember that in the case that we don't have a mask, we provide an array full of ones, so the label does not change.
         # The logic is that if the label is positive but there is no lesion in the patch -> label = 0. We don't consider the opposite case.
-        data_dict["seg"] = data_dict["seg"].sum()  # We just want to know if there is a lesion in the patch or not.
+        # data_dict["seg"] = data_dict["seg"].sum(axis=(1,2,3)) # We just want to know if there is a lesion in the patch or not.
+        data_dict["seg"] = data_dict["seg"].sum() # It is per-subject the label, since now we evaluate the full case.
         data_dict["label"] = label
 
         return self.to_torch(data_dict)
@@ -189,7 +190,7 @@ class PretrainDataset(Dataset):
         self.to_torch = NumpyToTorch()
     
     def load_scan(self, subject_id, session_id, scan_filename):
-        scan_name = scan_filename.replace('.nii.gz', '')
+        # scan_name = scan_filename.replace('.nii.gz', '')
         # case = f"{subject_id}_{session_id}_{scan_name}"
         data = self._load_volume(scan_filename)
         if np.isnan(data).any() or np.isinf(data).any():

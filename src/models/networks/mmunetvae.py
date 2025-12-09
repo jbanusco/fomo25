@@ -224,7 +224,9 @@ class MultiModalUNetVAE(nn.Module):
                 z_latent = torch.cat([z_s, z_m], dim=1)
                 # Ger prediction
                 result["task_output"] = self.decoder_task(z_latent)
-            
+                # print('output shape:')
+                # print(z_latent.shape, result["task_output"].shape)
+
             return result
         else:
             # --------------------------
@@ -335,12 +337,11 @@ class MultiModalUNetVAE(nn.Module):
 
         elif self.mode in ["classification", "regression"]:
             # For classification/regressison collect logits per patch (as list)
-            return self._patch_classification_predict(data, patch_size, overlap) 
+            return self._patch_classification_predict(data, patch_size, overlap)
         else:
             assert mode in ["3D", "2D"]
 
             if mode == "3D":
-                # print("EH")
                 predict_fn = self._sliding_window_predict3D
             elif mode == "2D":
                 predict_fn = self._sliding_window_predict2D
@@ -387,7 +388,8 @@ class MultiModalUNetVAE(nn.Module):
             logp = torch.log_softmax(logits, dim=-1)   # [P,2]
             agg = logp.mean(dim=0)                     # [2]  <-- average evidence
             probs = torch.softmax(agg, dim=-1)    # scalar in [0,1]
-
+            # print('probs shape:')
+            # print(probs.shape)
             return probs.unsqueeze(0)  # Batch
         
         elif self.mode == "regression":
@@ -395,7 +397,7 @@ class MultiModalUNetVAE(nn.Module):
             return_logits = torch.median(logits_stack, dim=0).values  # shape: [C]
         else:
             raise ValueError(f"Invalid mode for patch processing: {self.mode}")
-        
+
         return return_logits
 
     def _full_image_predict(self, data):

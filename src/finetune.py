@@ -271,7 +271,6 @@ def main():
 
     # Save last model every N epochs
     checkpoint_every_n = ModelCheckpoint(
-        # dirpath=version_dir,
         filename="last",
         every_n_epochs=10,
         save_last=True,
@@ -295,7 +294,6 @@ def main():
         )
     elif task_type == "segmentation":
         checkpoint_best = ModelCheckpoint(
-            # dirpath=version_dir,
             filename="best_model",
             monitor="val/full_case_dice",
             mode="max",
