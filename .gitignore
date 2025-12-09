@@ -4,6 +4,10 @@ __pycache__/
 
 # Script to build docker
 build_docker.sh
+run_cluster.sh
+eval_regression.sh
+eval_classification.sh
+eval_segmentation.sh
 
 # C extensions
 *.so
