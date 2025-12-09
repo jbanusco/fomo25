@@ -12,7 +12,6 @@ This codebase supports three tasks:
 Data for the challenge includes:
 - **Pretraining Data**: 11,187 subjects, 13,900 sessions, 60,529 scans
 - **Finetuning Data**: Limited few-shot data (~20-200 cases per task)
-- **Evaluation Data**: Unseen data for final assessment
 
 ## Requirements
 
@@ -38,7 +37,7 @@ While the data included in this challenge is already preprocessed (co-registered
 
 This "Opinionated Preprocessing" can be done in the following way
 
-### Yucca Preprocess Pretraining Data (required)
+### Preprocess Pretraining Data
 
 For preprocessing the pretraining (FOMO60K) data:
 
@@ -55,7 +54,7 @@ This will:
 5. Resample to isotropic (1mm, 1mm, 1mm) spacing.
 
 
-### Yucca Preprocess Finetuning Data (required)
+### Preprocess Finetuning Data (required)
 
 For preprocessing the finetuning data for tasks 1-3:
 
@@ -65,23 +64,23 @@ python src/data/preprocess/run_preprocessing.py --taskid=1 --source_path=/path/t
 
 Replace `--taskid=1` with `--taskid=2` or `--taskid=3` for the other tasks.
 
-This will:
-
+This will apply a preprocessing akin to the one of the pre-trained data:
 1. Assemble each session into a single 4D tensor and store it as a numpy array for easy loading.
-2. Crop to the minimum bounding box.
-3. Z-normalize on a per-volume level.
-4. Resample to isotropic (1mm, 1mm, 1mm) spacing.
+2. Treat each scan as a separate datapoint which can be sampled iid.
+3. Crop to the minimum bounding box.
+4. Z-normalize on a per-volume level.
+5. Resample to isotropic (1mm, 1mm, 1mm) spacing.
 
 
 ## Pretraining
 
-To pretrain a model using the AMAES (Augmented Masked Autoencoder) framework:
+To pretrain a model using the proposed framework solution:
 
 ```bash
 python src/pretrain.py \
     --save_dir=/path/to/save/models \
     --pretrain_data_dir=/path/to/preprocessed/pretrain/data \
-    --model_name=unet_b_lw_dec \
+    --model_name=mmunetvae \
     --patch_size=96 \
     --batch_size=2 \
     --epochs=100 \
@@ -106,7 +105,7 @@ python src/finetune.py \
     --data_dir=/path/to/preprocessed/data \
     --save_dir=/path/to/save/finetuned/models \
     --pretrained_weights_path=/path/to/pretrained/checkpoint.pth \
-    --model_name=unet_b \
+    --model_name=mmunetvae \
     --patch_size=96 \
     --taskid=1 \
     --batch_size=2 \
@@ -127,7 +126,7 @@ Key finetuning parameters:
 
 ## 💻 Hardware Requirements
 
-The reference implementation was pretrained on 2xH100 GPUs with 80GB of memory. Depending on your hardware, you may need to adjust batch sizes and patch sizes accordingly.
+The reference implementation was pretrained on 1 A100 GPU with 80GB of memory. Depending on your hardware, you may need to adjust batch sizes and patch sizes accordingly.
 
 ## 📚 Citation
 
@@ -147,11 +146,14 @@ If you use this code, please cite:
   journal={MICCAI Workshop on Advancing Data Solutions in Medical Imaging AI (ADSMI 2024)},
   year={2024}
 }
+```
 
-@article{llambias2024yucca,
-  title={Yucca: A deep learning framework for medical image analysis},
-  author={Llambias, Sebastian N{\o}rgaard and Machnio, Julia and Munk, Asbj{\o}rn and Ambsdorf, Jakob and Nielsen, Mads and Ghazi, Mostafa Mehdipour},
-  journal={arXiv preprint arXiv:2407.19888},
-  year={2024}
+Our work is currently under review. Full citation details will be available once published.
+```bibtex
+@article{brainfm2025,
+  title={TITLE},
+  author={[Authors]},
+  journal={Under Review},
+  year={2025}
 }
 ```
