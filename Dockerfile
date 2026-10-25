@@ -5,7 +5,7 @@ FROM nvcr.io/nvidia/pytorch:25.06-py3
 # Maintainer
 LABEL maintainer="Jaume Banus <jaume.banus-cobo@chuv.ch>"
 
-RUN apt-get update && apt-get install -y \
+RUN chmod 1777 /tmp && apt-get update && apt-get install -y \
     git \
     wget \
     && rm -rf /var/lib/apt/lists/*
