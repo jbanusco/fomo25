@@ -5,7 +5,7 @@ Pre-built Docker image for the FOMO25 Challenge with pretrained weights included
 ## Quick Start
 
 ```bash
-docker pull jbanusco/sslmmunetave:1.0.0
+docker pull jbanusco/sslmmunetave:1.0.1
 ```
 
 ## What's Included
@@ -36,4 +36,4 @@ $FOMO25_WEIGHTS_PATH
 ## Links
 
 - GitHub: https://github.com/jbanusco/fomo25
-- Release: https://github.com/jbanusco/fomo25/releases/tag/v1.0.0
+- Release: https://github.com/jbanusco/fomo25/releases/tag/v1.0.1

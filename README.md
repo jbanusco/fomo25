@@ -126,7 +126,7 @@ Key finetuning parameters:
 
 | Model | Dataset | Download |
 |-------|---------|----------|
-| MultiModalUNetVAE | FOMO-60K (100 epochs) | [v1.0.0 Release](https://github.com/jbanusco/fomo25/releases/tag/v1.0.0) |
+| MultiModalUNetVAE | FOMO-60K (100 epochs) | [v1.0.1 Release](https://github.com/jbanusco/fomo25/releases/tag/v1.0.1) |
 
 **Quick Download:**
 ```bash
@@ -135,7 +135,7 @@ Key finetuning parameters:
 
 # Or manually
 curl -L -o weights/fomo25_mmunetvae_pretrained.ckpt \
-  https://github.com/jbanusco/fomo25/releases/download/v1.0.0/fomo25_mmunetvae_pretrained.ckpt
+  https://github.com/jbanusco/fomo25/releases/download/v1.0.1/fomo25_mmunetvae_pretrained.ckpt
 ```
 
 **Load in Python:**
@@ -151,7 +151,7 @@ model.load_state_dict(checkpoint['state_dict'], strict=False)
 Pull the pre-built image with weights included:
 
 ```bash
-docker pull jbanusco/sslmmunetave:1.0.0
+docker pull jbanusco/sslmmunetave:1.0.1
 ```
 
 Docker Hub: [jbanusco/sslmmunetave](https://hub.docker.com/r/jbanusco/sslmmunetave)
